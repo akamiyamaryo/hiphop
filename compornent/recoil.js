@@ -5,7 +5,7 @@ const { persistAtom } = recoilPersist();
 
 export const userState = atom({
   key: "user",
-  default: {},
+  default: { id: "" },
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -15,7 +15,17 @@ export const numberState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 export const heartState = atom({
-  key: "number",
+  key: "heart",
   default: {},
+  effects_UNSTABLE: [persistAtom],
+});
+export const goodState = atom({
+  key: "good",
+  default: [],
+  effects_UNSTABLE: [persistAtom],
+});
+export const loginState = atom({
+  key: "login",
+  default: "",
   effects_UNSTABLE: [persistAtom],
 });

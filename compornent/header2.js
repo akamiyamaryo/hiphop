@@ -1,42 +1,36 @@
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
 import React from "react";
-import LogoutTwoToneIcon from "@mui/icons-material/LogoutTwoTone";
-import { useRecoilState } from "recoil";
-import { loginState } from "./recoil";
 import { useRouter } from "next/router";
 
-const Header = () => {
-  const [login, setLogin] = useRecoilState(loginState);
+const Header2 = () => {
   const router = useRouter();
 
-  const logout = () => {
-    if (login !== "") {
-      setLogin("");
-    } else {
-      alert("ログインしてください。");
-    }
+  const hipTop = () => {
+    router.push({
+      pathname: `/`,
+    });
   };
+
   return (
     <>
       <HEADER>
         <Button
-          startIcon={<LogoutTwoToneIcon />}
           sx={{
             position: "absolute",
             right: "0px",
             color: "black",
             margin: "10px 5px 0px 0px",
           }}
-          onClick={logout}
+          onClick={hipTop}
         >
-          ログアウト
+          TOPへ移動
         </Button>
       </HEADER>
     </>
   );
 };
-export default Header;
+export default Header2;
 
 const HEADER = styled.header`
   background-color: #92cb97;
