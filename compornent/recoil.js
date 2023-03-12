@@ -29,3 +29,7 @@ export const loginState = atom({
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
+export const pageState = atom({
+  key: "page",
+  default: "",
+});

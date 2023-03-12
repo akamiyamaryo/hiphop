@@ -123,7 +123,7 @@ export default function Account() {
         querySnapshot.docs.map((doc) => {
           array.push({
             id: doc.id,
-            time: doc.data().timestamp.seconds,
+            time: doc?.data()?.timestamp?.seconds,
             ...doc.data(),
           });
         });
@@ -482,6 +482,7 @@ const P10 = styled.p`
 const I1 = styled.img`
   width: 150px;
   border-radius: 50%;
+  height: 150px;
 `;
 const I2 = styled.img`
   width: 50px;

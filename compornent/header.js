@@ -13,8 +13,10 @@ const Header = () => {
   const logout = () => {
     if (login !== "") {
       setLogin("");
+      router.push({ pathname: "/login" });
     } else {
-      alert("ログインしてください。");
+      // alert("ログインしてください。");
+      // router.push({ pathname: "/login" });
     }
   };
   return (
