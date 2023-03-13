@@ -16,7 +16,7 @@ import { GoodIcon } from "../../compornent/good_icon";
 import { userState } from "../../compornent/recoil";
 import { db } from "../../firebase/client";
 import styled from "@emotion/styled";
-import { formatDateStr } from "../ults";
+import { formatDateStr } from "../../compornent/ults";
 import { Button, Input, InputLabel, TextField } from "@mui/material";
 import { userNameState } from "../../compornent/nicknameRecoil";
 import { photoState } from "../../compornent/photoRecoil";

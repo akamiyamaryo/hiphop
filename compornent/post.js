@@ -27,7 +27,7 @@ import { useRecoilState } from "recoil";
 import { photoState } from "./photoRecoil";
 import { userNameState } from "./nicknameRecoil";
 import { userState, loginState, pageState } from "./recoil";
-import { formatDateStr } from "../pages/ults";
+import { formatDateStr } from "./ults";
 import Account from "./account";
 import SearchIcon from "@mui/icons-material/Search";
 
