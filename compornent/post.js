@@ -171,71 +171,101 @@ export function Post() {
               return (
                 <>
                   <D5>
-                    <D2>
-                      <D4>
-                        <P7>ラッパー</P7>
-                        <TextField
-                          onChange={rapperStorage}
-                          name={rapper}
-                          value={rapper}
-                          inputProps={{ maxlength: 20 }}
-                          sx={{ width: "250px", margin: "0 30px 0 10px" }}
-                          size="small"
-                        ></TextField>
-                      </D4>
-                      <div>
-                        <P4>音源</P4>
-                        <TextField
-                          onChange={songStorage}
-                          name={song}
-                          value={song}
-                          inputProps={{ maxlength: 20 }}
-                          sx={{ width: "250px" }}
-                          size="small"
-                        ></TextField>
-                      </div>
+                    <D16>
+                      <D2>
+                        <D4>
+                          <P7>ラッパー</P7>
+                          <TextField
+                            onChange={rapperStorage}
+                            name={rapper}
+                            value={rapper}
+                            inputProps={{ maxlength: 20 }}
+                            sx={{
+                              width: "250px",
+                              margin: "0 30px 0 10px",
+                              "@media (max-width: 777px)": {
+                                width: "200px",
+                                marginRight: "10px",
+                              },
+                            }}
+                            size="small"
+                          ></TextField>
+                        </D4>
+                        <div>
+                          <P4>音源</P4>
+                          <TextField
+                            onChange={songStorage}
+                            name={song}
+                            value={song}
+                            inputProps={{ maxlength: 20 }}
+                            sx={{
+                              width: "250px",
+                              "@media (max-width: 777px)": {
+                                width: "200px",
+                                marginRight: "10px",
+                              },
+                            }}
+                            size="small"
+                          ></TextField>
+                        </div>
 
-                      <FormControl
-                        sx={{ m: 1, minWidth: 120, margin: "35px 0 0 50px" }}
-                        size="small"
-                      >
-                        <InputLabel id="demo-simple-select-label">
-                          ジャンル
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={kinds}
-                          label="ジャンル"
-                          onChange={kindsAdd}
-                          width="100px"
+                        <FormControl
+                          sx={{
+                            m: 1,
+                            minWidth: 120,
+                            margin: "35px 0 0 50px",
+                            "@media (max-width: 777px)": {
+                              marginLeft: "0px",
+                            },
+                          }}
+                          size="small"
                         >
-                          <MenuItem value={"チル"}>チル</MenuItem>
-                          <MenuItem value={"アングラ"}>アングラ</MenuItem>
-                          <MenuItem value={"リリシズム"}>リリシズム</MenuItem>
-                          <MenuItem value={"その他"}>その他</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </D2>
+                          <InputLabel id="demo-simple-select-label">
+                            ジャンル
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={kinds}
+                            label="ジャンル"
+                            onChange={kindsAdd}
+                            width="100px"
+                          >
+                            <MenuItem value={"チル"}>チル</MenuItem>
+                            <MenuItem value={"アングラ"}>アングラ</MenuItem>
+                            <MenuItem value={"リリシズム"}>リリシズム</MenuItem>
+                            <MenuItem value={"その他"}>その他</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </D2>
 
-                    <P7>コメント</P7>
-                    <TextField
-                      onChange={commentStorage}
-                      name={comment}
-                      value={comment}
-                      inputProps={{ maxlength: 200 }}
-                      sx={{ width: 500, marginLeft: "10px", marginRight: 20 }}
-                      size="small"
-                    ></TextField>
+                      <P7>コメント</P7>
+                      <TextField
+                        onChange={commentStorage}
+                        name={comment}
+                        value={comment}
+                        inputProps={{ maxlength: 200 }}
+                        sx={{
+                          width: 500,
+                          marginLeft: "10px",
+                          marginRight: 20,
+                          "@media (max-width: 777px)": {
+                            width: "400px",
+                            marginRight: "20px",
+                          },
+                        }}
+                        size="small"
+                      ></TextField>
 
-                    <Button
-                      onClick={send}
-                      variant="contained"
-                      color="primary"
-                      style={{ borderRadius: "10px" }}
-                    >
-                      投稿
-                    </Button>
+                      <Button
+                        onClick={send}
+                        variant="contained"
+                        color="primary"
+                        style={{ borderRadius: "10px" }}
+                      >
+                        投稿
+                      </Button>
+                    </D16>
                     <D12>
                       {(() => {
                         if (goodAdd === 1) {
@@ -655,250 +685,6 @@ export function Post() {
             }
           })()}
         </D3>
-        {/* <div>
-          <D13>
-            <D2>
-              <P8>ラッパーで検索</P8>
-              <FormControl
-                sx={{ m: 1, minWidth: 120, marginLeft: "120px" }}
-                size="small"
-              >
-                <InputLabel id="demo-simple-select-label">ジャンル</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={kinds3}
-                  label="ジャンル"
-                  onChange={kindsAdd3}
-                  width="100px"
-                >
-                  <MenuItem value={"チル"}>チル</MenuItem>
-                  <MenuItem value={"アングラ"}>アングラ</MenuItem>
-                  <MenuItem value={"リリシズム"}>リリシズム</MenuItem>
-                  <MenuItem value={"その他"}>その他</MenuItem>
-                </Select>
-              </FormControl>
-            </D2>
-
-            <TextField
-              onChange={rapperSearch}
-              value={search}
-              size="small"
-              sx={{ margin: "6px 60px 0 20px" }}
-            ></TextField>
-            <Button
-              onClick={rapperSearch2}
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: "10px", marginTop: "10px" }}
-              endIcon={<SearchIcon />}
-            >
-              検索
-            </Button>
-          </D13>
-          <D10>
-            {doing.map((post) => (
-              <>
-                {(() => {
-                  switch (search3) {
-                    case 1:
-                      if (search2 === "") {
-                        if (kinds2 === post.kinds) {
-                          const create = formatDateStr(post.time);
-                          return (
-                            <>
-                              <D7 key={post.id}>
-                                <D2>
-                                  <I2 src={post.photourl} />
-                                  <p> {post.name}</p>
-                                  <P1>{create}</P1>
-                                </D2>
-                                <D6>
-                                  <P2>ジャンル</P2>
-                                  <P1>{post.kinds}</P1>
-                                </D6>
-                                <D6>
-                                  <P2>ラッパー</P2>
-                                  <P1>{post.rappername}</P1>
-                                </D6>
-                                <D6>
-                                  <P2>音源</P2>
-                                  <P1>{post.songname}</P1>
-                                </D6>
-                                <P3>{post.comment}</P3>
-
-                                <GoodIcon id={post.id} />
-                              </D7>
-                            </>
-                          );
-                        }
-                      } else {
-                        if (search2 === post.rappername) {
-                          if (kinds2 === "") {
-                            const create = formatDateStr(post.time);
-                            return (
-                              <>
-                                <D7 key={post.id}>
-                                  <D2>
-                                    <I2 src={post.photourl} />
-                                    <p>{post.name}</p>
-                                    <P1>{create}</P1>
-                                  </D2>
-                                  <D6>
-                                    <P2>ジャンル</P2>
-                                    <P1>{post.kinds}</P1>
-                                  </D6>
-                                  <D6>
-                                    <P2>ラッパー</P2>
-                                    <P1>{post.rappername}</P1>
-                                  </D6>
-                                  <D6>
-                                    <P2>音源</P2>
-                                    <P1>{post.songname}</P1>
-                                  </D6>
-                                  <P3>{post.comment}</P3>
-
-                                  <GoodIcon id={post.id} />
-                                </D7>
-                              </>
-                            );
-                          } else {
-                            if (kinds2 === post.kinds) {
-                              const create = formatDateStr(post.time);
-                              return (
-                                <>
-                                  <D7 key={post.id}>
-                                    <D2>
-                                      <I2 src={post.photourl} />
-                                      <p>{post.name}</p>
-                                      <P1>{create}</P1>
-                                    </D2>
-                                    <D6>
-                                      <P2>ジャンル</P2>
-                                      <P1>{post.kinds}</P1>
-                                    </D6>
-                                    <D6>
-                                      <P2>ラッパー</P2>
-                                      <P1>{post.rappername}</P1>
-                                    </D6>
-                                    <D6>
-                                      <P2>音源</P2>
-                                      <P1>{post.songname}</P1>
-                                    </D6>
-                                    <P3>{post.comment}</P3>
-
-                                    <GoodIcon id={post.id} />
-                                  </D7>
-                                </>
-                              );
-                            }
-                          }
-                        }
-                      }
-                      break;
-                    case 2:
-                      if (search2 === "") {
-                        if (kinds2 === post.kinds) {
-                          const create = formatDateStr(post.time);
-                          return (
-                            <>
-                              <D7 key={post.id}>
-                                <D2>
-                                  <I2 src={post.photourl} />
-                                  <p>{post.name}</p>
-                                  <P1>{create}</P1>
-                                </D2>
-                                <D6>
-                                  <P2>ジャンル</P2>
-                                  <P1>{post.kinds}</P1>
-                                </D6>
-                                <D6>
-                                  <P2>ラッパー</P2>
-                                  <P1>{post.rappername}</P1>
-                                </D6>
-                                <D6>
-                                  <P2>音源</P2>
-                                  <P1>{post.songname}</P1>
-                                </D6>
-                                <P3>{post.comment}</P3>
-
-                                <GoodIcon id={post.id} />
-                              </D7>
-                            </>
-                          );
-                        }
-                      } else {
-                        if (search2 === post.rappername) {
-                          if (kinds2 === "") {
-                            const create = formatDateStr(post.time);
-                            return (
-                              <>
-                                <D7 key={post.id}>
-                                  <D2>
-                                    <I2 src={post.photourl} />
-                                    <p>{post.name}</p>
-                                    <P1>{create}</P1>
-                                  </D2>
-                                  <D6>
-                                    <P2>ジャンル</P2>
-                                    <P1>{post.kinds}</P1>
-                                  </D6>
-                                  <D6>
-                                    <P2>ラッパー</P2>
-                                    <P1>{post.rappername}</P1>
-                                  </D6>
-                                  <D6>
-                                    <P2>音源</P2>
-                                    <P1>{post.songname}</P1>
-                                  </D6>
-                                  <P3>{post.comment}</P3>
-
-                                  <GoodIcon id={post.id} />
-                                </D7>
-                              </>
-                            );
-                          } else {
-                            if (kinds2 === post.kinds) {
-                              const create = formatDateStr(post.time);
-                              return (
-                                <>
-                                  <D7 key={post.id}>
-                                    <D2>
-                                      <I2 src={post.photourl} />
-                                      <p>{post.name}</p>
-                                      <P1>{create}</P1>
-                                    </D2>
-                                    <D6>
-                                      <P2>ジャンル</P2>
-                                      <P1>{post.kinds}</P1>
-                                    </D6>
-                                    <D6>
-                                      <P2>ラッパー</P2>
-                                      <P1>{post.rappername}</P1>
-                                    </D6>
-                                    <D6>
-                                      <P2>音源</P2>
-                                      <P1>{post.songname}</P1>
-                                    </D6>
-                                    <P3>{post.comment}</P3>
-
-                                    <GoodIcon id={post.id} />
-                                  </D7>
-                                </>
-                              );
-                            }
-                          }
-                        }
-                      }
-                      break;
-                    case 0:
-                      break;
-                  }
-                })()}
-              </>
-            ))}
-          </D10>
-        </div> */}
       </D11>
     </>
   );
@@ -916,6 +702,9 @@ const D2 = styled.div`
 const D3 = styled.div`
   width: 750px;
   margin: 0 auto;
+  @media (max-width: 777px) {
+    width: 100vw;
+  }
 `;
 const D4 = styled.div`
   margin: 0 10px 0 10px
@@ -931,6 +720,11 @@ const D5 = styled.div`
   width: 750px;
   height: 208px;
   top: 50px;
+  @media (max-width: 777px) {
+    width: 100vw;
+    margin: 0 auto;
+    left: 0;
+  }
 `;
 const D6 = styled.div`
   margin: 0 auto;
@@ -942,6 +736,11 @@ const D6 = styled.div`
   width: 750px;
   height: 120px;
   top: 50px;
+  @media (max-width: 777px) {
+    width: 100vw;
+    margin: 0 auto;
+    left: 0;
+  }
 `;
 const D7 = styled.div`
   margin: 0 auto;
@@ -983,6 +782,12 @@ const D14 = styled.div`
 `;
 const D15 = styled.div`
   display: flex;
+`;
+const D16 = styled.div`
+  @media (max-width: 777px) {
+    margin: 0 auto;
+    width: 560px;
+  }
 `;
 const P1 = styled.p`
   margin: 0 0 0 5px;

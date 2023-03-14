@@ -4,7 +4,15 @@ import { Button, Input, InputLabel, TextField } from "@mui/material";
 import { db } from "../firebase/client";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../firebase/client";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { loginState, userState } from "../compornent/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userNameState } from "../compornent/nicknameRecoil";
@@ -33,22 +41,58 @@ const Login = () => {
   const handleSubmit = async (e) => {
     if (email !== "" && password !== "" && nickname !== "" && photo !== "") {
       if (nickname.length <= 15 && password.length <= 20) {
-        e.preventDefault();
-        await signInWithEmailAndPassword(auth, email, password);
-        addDoc(collection(db, "user"), {
-          nickname: nickname,
-          id: userId.id,
-        });
-        const storageRef = ref(storage, "image/" + photo.name);
-        uploadBytes(storageRef, photo).then();
-        //recoilに値を追加
-        setUserNameId(nickname);
-        //画像のurl取得
-        getDownloadURL(ref(storage, "image/" + photo.name)).then((url) => {
-          setPhotoId(url);
-        });
-        setLogin("true");
-        router.push("/");
+        if (userId.id === "") {
+          e.preventDefault();
+          await signInWithEmailAndPassword(auth, email, password);
+          addDoc(collection(db, "user"), {
+            nickname: nickname,
+            id: userId.id,
+          });
+          const storageRef = ref(storage, "image/" + photo.name);
+          uploadBytes(storageRef, photo).then();
+          //recoilに値を追加
+          setUserNameId(nickname);
+          //画像のurl取得
+          getDownloadURL(ref(storage, "image/" + photo.name)).then((url) => {
+            setPhotoId(url);
+          });
+          setLogin("true");
+          router.push("/");
+        } else {
+          e.preventDefault();
+          await signInWithEmailAndPassword(auth, email, password);
+          const storageRef = ref(storage, "image/" + photo.name);
+          uploadBytes(storageRef, photo).then();
+          //recoilに値を追加
+          setUserNameId(nickname);
+          //画像のurl取得
+          getDownloadURL(ref(storage, "image/" + photo.name)).then((url) => {
+            setPhotoId(url);
+          });
+          const postData = collection(db, "posts");
+          /*最新の投稿に並び変える*/
+          const q = query(postData, where("user", "==", userId.id));
+          onSnapshot(q, (querySnapshot) => {
+            const array = [];
+            querySnapshot.docs.map((doc) => {
+              array.push({
+                id: doc.id,
+                time: doc?.data()?.timestamp?.seconds,
+                ...doc.data(),
+              });
+            });
+            array.map((name) => {
+              const washingtonRef = doc(db, "posts", name.id);
+              updateDoc(washingtonRef, {
+                name: nickname,
+                photourl: photoId,
+              });
+            });
+          });
+
+          setLogin("true");
+          router.push("/");
+        }
       } else {
         alert(
           "ニックネームは15字以内、パスワードは20字以内に設定してください。"

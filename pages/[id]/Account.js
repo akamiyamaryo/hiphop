@@ -81,7 +81,7 @@ export default function Account() {
         const docSnap = await getDoc(docRef);
         aRray.push({
           id: docSnap.id,
-          time: docSnap.data().timestamp.seconds,
+          time: docSnap?.data()?.timestamp?.seconds,
           ...docSnap.data(),
         });
       });
@@ -103,7 +103,6 @@ export default function Account() {
   };
   const myPost = () => {
     setChangePost("1");
-    console.log(photoId);
   };
   const goodPost = async () => {
     setChangePost("2");
@@ -401,6 +400,11 @@ const D3 = styled.div`
 const D4 = styled.div`
   margin: 0 auto;
   width: 800px;
+  @media (max-width: 820px) {
+    width: 100vw;
+    margin: 0;
+    left: 0;
+  }
 `;
 const D5 = styled.div`
   margin-top: 256px;
@@ -423,6 +427,11 @@ const D7 = styled.div`
   border-left: 1px solid #dddddd;
   z-index: 1501;
   height: 205px;
+  @media (max-width: 820px) {
+    width: 100vw;
+    margin: 0 auto;
+    left: 0;
+  }
 `;
 const D8 = styled.div`
   margin-top: 5px;

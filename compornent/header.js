@@ -15,25 +15,25 @@ const Header = () => {
       setLogin("");
       router.push({ pathname: "/login" });
     } else {
-      // alert("ログインしてください。");
-      // router.push({ pathname: "/login" });
     }
   };
   return (
     <>
       <HEADER>
-        <Button
-          startIcon={<LogoutTwoToneIcon />}
-          sx={{
-            position: "absolute",
-            right: "0px",
-            color: "black",
-            margin: "10px 5px 0px 0px",
-          }}
-          onClick={logout}
-        >
-          ログアウト
-        </Button>
+        <D1>
+          <Button
+            startIcon={<LogoutTwoToneIcon />}
+            sx={{
+              position: "absolute",
+              right: "0px",
+              color: "black",
+              margin: "10px 5px 0px 0px",
+            }}
+            onClick={logout}
+          >
+            ログアウト
+          </Button>
+        </D1>
       </HEADER>
     </>
   );
@@ -50,5 +50,7 @@ const HEADER = styled.header`
   z-index: 1501;
 `;
 const D1 = styled.div`
-  width: auto;
+  @media (max-width: 990px) {
+    display: none;
+  }
 `;
