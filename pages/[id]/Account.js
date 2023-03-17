@@ -3,9 +3,11 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -14,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { GoodIcon } from "../../compornent/good_icon";
 import { userState } from "../../compornent/recoil";
-import { db } from "../../firebase/client";
+import { app, db, storage } from "../../firebase/client";
 import styled from "@emotion/styled";
 import { formatDateStr } from "../../compornent/ults";
 import { Button, Input, InputLabel, TextField } from "@mui/material";
@@ -24,8 +26,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import IconButton from "@mui/material/IconButton";
 import Header from "../../compornent/header";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function Account() {
+  const auth = getAuth(app);
   const [doing, setDoing] = useState([]);
   const [userId, setUserId] = useRecoilState(userState);
   const [changePro, setChangePro] = useState("false");
@@ -36,7 +42,8 @@ export default function Account() {
   const [photoId, setPhotoId] = useRecoilState(photoState);
   const router = useRouter();
   const property = userId.id;
-  const a = photoId;
+  const [changePhoto, setChangePhoto] = useState("");
+  const [photo, setPhoto] = useState("");
 
   useEffect(() => {
     if (userId.id !== window.location.pathname.slice(1, 29)) {
@@ -108,50 +115,29 @@ export default function Account() {
     setChangePost("2");
   };
   const changeAdd = async () => {
-    if (nickname !== "" && nickname.length <= 15) {
+    if (nickname !== "" && nickname.length <= 15 && changePhoto !== "") {
       setChangePro("");
       setUserNameId(nickname);
-      const postData = collection(db, "posts");
-      /*最新の投稿に並び変える*/
-      const q = query(
-        postData,
-        where("user", "==", userId.id),
-        orderBy("timestamp", "desc")
-      );
-      onSnapshot(q, (querySnapshot) => {
-        const array = [];
-        querySnapshot.docs.map((doc) => {
-          array.push({
-            id: doc.id,
-            time: doc?.data()?.timestamp?.seconds,
-            ...doc.data(),
-          });
-        });
-        array.map((name) => {
-          const washingtonRef = doc(db, "posts", name.id);
-          updateDoc(washingtonRef, {
-            name: nickname,
-          });
-        });
+      const storageRef = ref(storage, "image/" + photo.name);
+      uploadBytes(storageRef, photo).then(() => {
+        //画像のurl取得
+        getDownloadURL(ref(storage, "image/" + photo.name)).then(
+          async (url) => {
+            setPhotoId(url);
+            const q = query(
+              collection(db, "posts"),
+              where("user", "==", userId.id)
+            );
+            const querySnapshot = await getDocs(q);
+            querySnapshot.docs.map((name) => {
+              const wash = doc(db, "posts", name.id);
+              setDoc(wash, { name: nickname, photourl: url }, { merge: true });
+            });
+          }
+        );
       });
-      const postDatA = collection(db, "posts");
-      /*最新の投稿に並び変える*/
-      const Q = query(
-        postDatA,
-        where("user", "==", userId.id),
-        orderBy("timestamp", "desc")
-      );
-      onSnapshot(Q, (querySnapshot) => {
-        const array = [];
-        querySnapshot.docs.map((doc) => {
-          array.push({
-            id: doc.id,
-            time: doc.data().timestamp.seconds,
-            ...doc.data(),
-          });
-        });
-        setDoing(array);
-      });
+    } else {
+      alert("未入力の箇所があります。");
     }
   };
   const handleChangeNichname = (e) => {
@@ -180,6 +166,11 @@ export default function Account() {
       setDoing(array);
     });
   };
+  const addPhoto = (e) => {
+    const file = e.target.files[0];
+    setPhoto(file);
+    setChangePhoto(window?.URL?.createObjectURL(file));
+  };
 
   return (
     <>
@@ -190,36 +181,87 @@ export default function Account() {
             <I1 src={photoId} />
             <div>
               <P4>{userNameId}</P4>
-              <D2>
-                <Button
-                  onClick={change}
-                  sx={{
-                    borderRadius: 10,
-                    marginRight: "10px",
-                    marginTop: "12px",
-                    height: "30px",
-                  }}
-                >
-                  ユーザー情報
-                </Button>
-                {(() => {
-                  if (changePro === "true") {
-                    return (
-                      <>
-                        <div>
-                          <InputLabel>ニックネーム</InputLabel>
-                          <TextField
-                            size="small"
-                            onChange={handleChangeNichname}
-                            inputProps={{ maxlength: 15 }}
-                          />
-                          <Button onClick={changeAdd}>変更</Button>
-                        </div>
-                      </>
-                    );
-                  }
-                })()}
-              </D2>
+
+              <Button
+                onClick={change}
+                sx={{
+                  borderRadius: 10,
+                  marginRight: "10px",
+                  marginTop: "12px",
+                  height: "30px",
+                }}
+              >
+                ユーザー情報
+              </Button>
+              {(() => {
+                if (changePro === "true") {
+                  return (
+                    <>
+                      <D10>
+                        <D11>
+                          <D6>
+                            {(() => {
+                              if (changePhoto === "") {
+                                return (
+                                  <>
+                                    <AccountCircleIcon
+                                      fontSize="large"
+                                      sx={{ width: "100px", marginTop: "20px" }}
+                                    />
+                                  </>
+                                );
+                              } else {
+                                return (
+                                  <>
+                                    <I3 src={changePhoto} />
+                                  </>
+                                );
+                              }
+                            })()}
+                          </D6>
+                          <D13>
+                            <D12>
+                              <Label>
+                                <Input
+                                  type="file"
+                                  name="example"
+                                  accept=".png, .jpeg, .jpg"
+                                  onChange={addPhoto}
+                                  sx={{
+                                    width: "300px",
+                                    display: "none",
+                                  }}
+                                />
+                                ファイルを選択
+                              </Label>
+                            </D12>
+                            <InputLabel>ニックネーム</InputLabel>
+                            <TextField
+                              size="small"
+                              onChange={handleChangeNichname}
+                              inputProps={{ maxlength: 15 }}
+                              sx={{ width: "300px" }}
+                            />
+                          </D13>
+                          <D16>
+                            <Button
+                              onClick={() => {
+                                setChangePro("");
+                              }}
+                              sx={{}}
+                            >
+                              戻る
+                            </Button>
+                            <Button onClick={changeAdd} sx={{}}>
+                              変更
+                            </Button>
+                          </D16>
+                        </D11>
+                      </D10>
+                    </>
+                  );
+                }
+              })()}
             </div>
             <IconButton
               color="primary"
@@ -413,9 +455,9 @@ const D5 = styled.div`
   border-left: 1px solid #dddddd;
 `;
 const D6 = styled.div`
-  display: flex;
-  align-items: center;
-  height: 30px;
+  margin: 10px auto 0;
+  width: 100px;
+  height: 100px;
 `;
 const D7 = styled.div`
   position: fixed;
@@ -439,12 +481,40 @@ const D8 = styled.div`
 const D9 = styled.div`
   display: flex;
 `;
+const D10 = styled.div`
+  min-width: 100%;
+  min-height: 100vh;
+  z-index: 1505;
+  background-color: rgba(128, 128, 128, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+`;
+const D11 = styled.div`
+  border: 1px solid #dddddd;
+  background-color: white;
+  margin: 150px auto;
+  width: 400px;
+  height: 320px;
+  border-radius: 5%;
+`;
+const D12 = styled.div`
+  height: 30px;
+  margin: 20px 0 10px 0;
+`;
+const D13 = styled.div`
+  width: 300px;
+  margin: 0 auto;
+`;
 const D14 = styled.div`
   width: 400px;
   margin: 0;
 `;
 const D15 = styled.div`
   display: flex;
+`;
+const D16 = styled.div`
+  margin: 10px 0 0 230px;
 `;
 const P1 = styled.p`
   margin: 0 0 0 5px;
@@ -498,4 +568,18 @@ const I2 = styled.img`
   width: 50px;
   border-radius: 50%;
   margin-right: 10px;
+`;
+const I3 = styled.img`
+  width: 100px;
+  border-radius: 50%;
+  height: 100px;
+`;
+const Label = styled.label`
+  padding: 5px 94px;
+  color: black;
+  background-color: rgb(230, 230, 230);
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(210, 210, 210);
+  }
 `;

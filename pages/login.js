@@ -8,8 +8,10 @@ import {
   addDoc,
   collection,
   doc,
+  getDocs,
   onSnapshot,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -49,49 +51,49 @@ const Login = () => {
             id: userId.id,
           });
           const storageRef = ref(storage, "image/" + photo.name);
-          uploadBytes(storageRef, photo).then();
-          //recoilに値を追加
-          setUserNameId(nickname);
-          //画像のurl取得
-          getDownloadURL(ref(storage, "image/" + photo.name)).then((url) => {
-            setPhotoId(url);
-          });
-          setLogin("true");
-          router.push("/");
-        } else {
-          e.preventDefault();
-          await signInWithEmailAndPassword(auth, email, password);
-          const storageRef = ref(storage, "image/" + photo.name);
-          uploadBytes(storageRef, photo).then();
-          //recoilに値を追加
-          setUserNameId(nickname);
-          //画像のurl取得
-          getDownloadURL(ref(storage, "image/" + photo.name)).then((url) => {
-            setPhotoId(url);
-          });
-          const postData = collection(db, "posts");
-          /*最新の投稿に並び変える*/
-          const q = query(postData, where("user", "==", userId.id));
-          onSnapshot(q, (querySnapshot) => {
-            const array = [];
-            querySnapshot.docs.map((doc) => {
-              array.push({
-                id: doc.id,
-                time: doc?.data()?.timestamp?.seconds,
-                ...doc.data(),
-              });
-            });
-            array.map((name) => {
-              const washingtonRef = doc(db, "posts", name.id);
-              updateDoc(washingtonRef, {
-                name: nickname,
-                photourl: photoId,
-              });
+          uploadBytes(storageRef, photo).then(() => {
+            //画像のurl取得
+            getDownloadURL(ref(storage, "image/" + photo.name)).then((url) => {
+              setPhotoId(url);
             });
           });
 
           setLogin("true");
+          setUserNameId(nickname);
           router.push("/");
+        } else {
+          e.preventDefault();
+
+          await signInWithEmailAndPassword(auth, email, password);
+          const storageRef = ref(storage, "image/" + photo.name);
+          uploadBytes(storageRef, photo).then(() => {
+            //画像のurl取得
+            getDownloadURL(ref(storage, "image/" + photo.name)).then(
+              async (url) => {
+                setPhotoId(url);
+                const q = query(
+                  collection(db, "posts"),
+                  where("user", "==", userId.id)
+                );
+                const querySnapshot = await getDocs(q);
+                querySnapshot.docs.map((name) => {
+                  const wash = doc(db, "posts", name.id);
+                  setDoc(
+                    wash,
+                    { name: nickname, photourl: url },
+                    { merge: true }
+                  );
+                });
+              }
+            );
+          });
+          setUserNameId(nickname);
+          setLogin("true");
+
+          setNickname("");
+          router.push({
+            pathname: "/",
+          });
         }
       } else {
         alert(
@@ -115,7 +117,6 @@ const Login = () => {
     //firebaseに画像アップ
     const file = e.target.files[0];
     setPhoto(file);
-    console.log(file);
     setA(window?.URL?.createObjectURL(file));
   };
 

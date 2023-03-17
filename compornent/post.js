@@ -114,7 +114,6 @@ export function Post() {
   };
   const myStorage = () => {
     setGoodAdd(1);
-    console.log(doing);
   };
   const popular = () => {
     setGoodAdd(0);

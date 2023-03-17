@@ -17,7 +17,6 @@ const Singup = () => {
   const [userId, setUserId] = useRecoilState(userState);
 
   const handleSubmit = async (e) => {
-    console.log(window?.location?.pathname);
     if (password === "" || email === "") {
       alert("未入力の欄があります");
     } else {
